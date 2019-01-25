@@ -47,6 +47,9 @@ import '../../ui/pages/admin_reports/mbti_report/mbti_report.js';
 import '../../ui/pages/comment_report/comment_report.js';
 import '../../ui/pages/user_management/user_management.html';
 import '../../ui/pages/user_management/user_management.js';
+import '../../ui/pages/tsq/tsq.html'
+import '../../ui/pages/tsq/tsq.js'
+
 import { resolveSoa } from 'dns';
 
 // Weak Questions Component
@@ -103,6 +106,15 @@ FlowRouter.route('/dashboard', {
       BlazeLayout.render('App_body', { top: 'header', main: 'dash_min' });
     },
 });
+
+FlowRouter.route('/tsq', {
+    name: 'tsq',
+    action () {
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_main' })
+    },
+})
+// FlowRouter.route('/tsq/languagelist', {})
+
 FlowRouter.route('/tools', {
 	triggersEnter: [AccountsTemplates.ensureSignedIn, ensureEmailVerified],
     name: 'tools',
