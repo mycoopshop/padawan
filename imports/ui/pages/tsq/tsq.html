@@ -1,3 +1,43 @@
 <template name="tsq_main">
-	<h1>Test</h1>
+	{{ #if Template.subscriptionsReady }}
+
+		<!-- <h1>Technical Skills</h1> -->
+
+		{{ #if noCurrentTSQ }}
+			{{ > tsq_new }}
+		{{ else }}
+			{{ > tsq_current }}
+		{{ /if }}
+
+	{{ else }}
+
+		<div class="container text-center">
+			{{ > loading }}
+		</div>
+
+	{{ /if }}
+</template>
+
+<template name="tsq_current">
+	<p>TSQ CURRENT</p>
+</template>
+
+<template name="tsq_new">
+	{{ #if noEnteredText }}
+		{{ > tsq_paste_prolfile }}
+	{{ /if }}
+</template>
+
+
+<template name="tsq_paste_profile">
+		<div class="container text-center">
+			<h2>Computer Languages</h2>
+			<p class="lead">(and frameworks)</p>
+			<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
+					we'll pull the programming, scripting, and markup languages and
+					frameworks you're familiar with</label>
+			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
+			<p><small>Status: Testing</small></p>
+			<button class="btn btn-success" id="tsq-enterSkillsNext">Next</button>
+		</div>
 </template>
