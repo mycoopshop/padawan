@@ -12,14 +12,27 @@ const subscribeToUsers = function (self) {
     return self
 }
 
-let userSkillsEntered = ReactiveVar()
+let testData = {
+	skillList: 'python, mongo, sql, javascript, c#'
+}
+
+let userSkillsInformation = testData.skillList
+let userSkillsEntered = new ReactiveVar();
+let userSkillsListCurrent;
+
+let status = {
+	word: 'testing',
+	color: 'success',
+}
 
 // main template
+
 
 // main temp on created
 Template.tsq_main.onCreated( function () {
 	this.autorun(() => {
 		subscribeToUsers(this)
+		userSkillsEntered.set(testData.skillList.split(','))
 	})
 })
 
@@ -44,8 +57,21 @@ Template.tsq_new.helpers({
 
 
 // enter skill textarea and next button
+Template.tsq_pasteProfile.rendered = function () {
+	let textarea = $('#tsq-enterSkillsTextarea')
+		textarea.val(testData.skillList)
+};
 
-Template.tsq_paste_profile.events({
+Template.tsq_pasteProfile.helpers({
+	showStatusWord () {
+		return status.word
+	},
+	showSTatusColor () {
+		return status.color
+	}
+})
+
+Template.tsq_pasteProfile.events({
 	'click #tsq-enterSkillsNext': function (event, instance) {
 		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim()
 		userSkillsEntered.set(userEnteredText.split(','))
@@ -53,3 +79,10 @@ Template.tsq_paste_profile.events({
 		return
 	}
 });
+
+
+Template.tsq_userSkillsList.helpers({
+	showSkills() {
+		return userSkillsEntered.get().join(',')
+	}
+})
