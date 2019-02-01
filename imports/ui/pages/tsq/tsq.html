@@ -1,3 +1,53 @@
 <template name="tsq_main">
-	<h1>Test</h1>
+	{{ #if Template.subscriptionsReady }}
+
+		<!-- <h1>Technical Skills</h1> -->
+
+		{{ #if noCurrentTSQ }}
+			{{ > tsq_new }}
+		{{ else }}
+			{{ > tsq_current }}
+		{{ /if }}
+
+	{{ else }}
+
+		<div class="container text-center">
+			{{ > loading }}
+		</div>
+
+	{{ /if }}
+</template>
+
+<!-- the user has filled out tsq before -->
+<template name="tsq_current">
+	<p>TSQ CURRENT</p>
+</template>
+
+<!-- the user is filling this out for the first time -->
+<template name="tsq_new">
+	{{ #if noEnteredText }}
+		{{ > tsq_pasteProfile }}
+		<div class="container">
+			{{ > tsq_userSkillsList }}
+		</div>
+	{{ /if }}
+</template>
+
+<!-- the user can paste their profile or skills section of their resume in -->
+<template name="tsq_pasteProfile">
+		<div class="container text-center">
+			<h2>Computer Languages</h2>
+			<p class="lead">(and frameworks)</p>
+			<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
+					we'll pull the programming, scripting, and markup languages and
+					frameworks you're familiar with</label>
+			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
+			<!-- <p><small id="tsq-status-banner" class="{{ showSTatusColor }}">Status: {{ showStatusWord }}</small></p> -->
+			<button class="btn btn-success" id="tsq-enterSkillsNext">Next</button>
+		</div>
+</template>
+
+<!-- this is the user's skills list displayed as a comma delinated string -->
+<template name="tsq_userSkillsList">
+	<p>{{ showSkills }}</p>
 </template>
