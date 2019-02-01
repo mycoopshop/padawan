@@ -2,14 +2,64 @@ import {Meteor} from 'meteor/meteor'
 import {Mongo} from 'meteor/mongo'
 import {Class} from 'meteor/jagi:astronomy'
 
-const TSQ = Class.create({
-	name: 'tsq',
-	collection: Mongo.collection('tsq_data')
+
+const ConfidenceRubric = {
+	'0': {
+		prompt: 'unfamilar',
+		value: 0
+	},
+	'1': {
+		prompt: 'a month or more',
+		value: 1
+	},
+	'2': {
+		prompt: 'a week or two',
+		value: 2
+	},
+	'3': {
+		prompt: 'a couple of days',
+		value: 3
+	},
+	'4': {
+		prompt: '8 to 10 hours',
+		value: 4
+	},
+	'5': {
+		prompt: 'a couple of hours',
+		value: 5
+	},
+	'6': {
+		prompt: 'I could architect and give detailed technical leadership to a team today',
+		value: 6
+	}
+}
+
+const ConfidenceInfo = Class.create({
+	name: 'confidence_level',
 	fields: {
-		data: {
-			type: Array,
+		language: {
+			type: String,
+		}
+		prompt: {
+			type: String,
+			default: ConfidenceRubric['0'].prompt
+		},
+		value: {
+			type: Number,
+			default: ConfidenceRubric['0'].value
 		}
 	}
 })
 
-
+const TSQ = Class.create({
+	name: 'tsq',
+	collection: Mongo.collection('tsq_data')
+	fields: {
+		userLanguageList: {
+			type: Array,
+		},
+		confidenceLevel: {
+			type: ConfidenceInfo,
+		}
+	}
+})
