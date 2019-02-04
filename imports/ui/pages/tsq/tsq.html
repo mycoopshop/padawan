@@ -40,19 +40,29 @@
 <!-- the user can paste their profile or skills section of their resume in -->
 <template name="tsq_pasteProfile">
 		<style type="text/css">
-			#tsq-enterSkillsNext {
+			.tsq-enterSkillsContinue {
 				margin: .5rem 0 0 0;
 			}
 		</style>
 		<div class="container text-center">
 			<h2>Computer Languages</h2>
 			<p class="lead">(and frameworks)</p>
-			<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
-					we'll pull the programming, scripting, and markup languages and
-					frameworks you're familiar with</label>
+			{{ #if alreadyHasSkills }}
+				<label for="tsq-enterSkillsTextarea">Do you have anything to add?</label>
+			{{ else }}
+				<label for="tsq-enterSkillsTextarea">	Copy and paste your resume or linkedin profile here and
+						we'll pull the programming, scripting, and markup languages and
+						frameworks you're familiar with</label>
+			{{ /if }}
 			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
 			<!-- <p><small id="tsq-status-banner" class="{{ showSTatusColor }}">Status: {{ showStatusWord }}</small></p> -->
-			<button class="btn btn-success" id="tsq-enterSkillsNext">Next</button>
+			{{ #if alreadyHasSkills }}
+				<button class="btn btn-default tsq-enterSkillsContinue" id="">No that's it</button>
+				<br>
+				<button class="btn btn-success tsq-enterSkillsContinue" id="">I've added some stuff, try again</button>
+			{{ else }}
+			<button class="btn btn-success tsq-enterSkillsContinue" id="">Next</button>
+			{{ /if }}
 		</div>
 </template>
 
