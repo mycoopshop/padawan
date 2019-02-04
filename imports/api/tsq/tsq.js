@@ -51,15 +51,24 @@ const ConfidenceInfo = Class.create({
 	}
 })
 
+const LanguageInfo = Class.create({
+	name: 'language_info',
+	fields: {
+		name: {
+			type: String,
+		},
+		confidenceLevel: {
+			type: ConfidenceInfo,
+		}
+	}
+})
+
 const TSQ = Class.create({
 	name: 'tsq',
 	collection: Mongo.collection('tsq_data'),
 	fields: {
 		userLanguageList: {
-			type: Array,
+			type: [LanguageInfo],
 		},
-		confidenceLevel: {
-			type: ConfidenceInfo,
-		}
 	}
 })
