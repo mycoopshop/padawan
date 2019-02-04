@@ -40,7 +40,8 @@ Template.tsq_main.onCreated( function () {
 Template.tsq_main.helpers({
 	noCurrentTSQ(){
 		console.log('noCurrentTSQ returns true right now as a default')
-		return true
+		// return true
+		return false
 	}
 });
 
