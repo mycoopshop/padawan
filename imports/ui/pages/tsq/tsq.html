@@ -3,8 +3,8 @@
 
 		<!-- <h1>Technical Skills</h1> -->
 
-		{{ #if noCurrentTSQ }}
-			{{ > tsq_new }}
+		{{ #if addSkills }}
+			{{ > tsq_addSkills }}
 		{{ else }}
 			{{ > tsq_current }}
 		{{ /if }}
@@ -28,7 +28,7 @@
 </template>
 
 <!-- the user is filling this out for the first time -->
-<template name="tsq_new">
+<template name="tsq_addSkills">
 	{{ #if noEnteredText }}
 		{{ > tsq_pasteProfile }}
 		<div class="container">

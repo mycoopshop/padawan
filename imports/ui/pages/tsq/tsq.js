@@ -3,6 +3,33 @@ import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 
+/**
+ * Variables/Constants
+ */
+
+// static test data
+let testData = {
+	skillList: 'python, mongo, sql, javascript, c#'
+}
+
+let userSkillsInformation = testData.skillList
+let userSkillsEntered = new ReactiveVar();
+let userSkillsListCurrent;
+
+// the default for this should actually be true unless the user has tsq data already
+let addSkills = new ReactiveVar(false)
+
+// this is for a status notifier but I commented it out because it might be overkill
+let status = {
+	word: 'testing',
+	color: 'success',
+}
+
+/**
+ * Functions
+ */
+
+
 // subs
 const subscribeToUsers = function (self) {
     self.subscription = self.subscribe('users', {
@@ -12,23 +39,11 @@ const subscribeToUsers = function (self) {
     return self
 }
 
-let testData = {
-	skillList: 'python, mongo, sql, javascript, c#'
-}
+/**
+ * Templates
+ */
 
-let userSkillsInformation = testData.skillList
-let userSkillsEntered = new ReactiveVar();
-let userSkillsListCurrent;
-
-let status = {
-	word: 'testing',
-	color: 'success',
-}
-
-// main template
-
-
-// main temp on created
+// main temp
 Template.tsq_main.onCreated( function () {
 	this.autorun(() => {
 		subscribeToUsers(this)
@@ -36,20 +51,18 @@ Template.tsq_main.onCreated( function () {
 	})
 })
 
+
 // main temp helpers
 Template.tsq_main.helpers({
-	noCurrentTSQ(){
-		console.log('noCurrentTSQ returns true right now as a default')
-		// return true
-		return false
+	// renamed from noCurrentTSQ. represents whether user wants to add skills / doesn't currently have any
+	addSkills(){
+		return addSkills.get()
 	}
 });
 
 
-// tsq new template
-
-// first time tsq workflow
-Template.tsq_new.helpers({
+// add skills tsq workflow
+Template.tsq_addSkills.helpers({
 	noEnteredText() {
 		console.log('returning true for now')
 		return true
@@ -57,11 +70,20 @@ Template.tsq_new.helpers({
 });
 
 
+// tsq current template
+Template.tsq_current.events({
+	'click #tsq-addMoreSkills': function (event, instance) {
+		addSkills.set(true)
+	}
+})
+
+
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
 	let textarea = $('#tsq-enterSkillsTextarea')
 		textarea.val(testData.skillList)
 };
+
 
 Template.tsq_pasteProfile.helpers({
 	showStatusWord () {
@@ -71,6 +93,7 @@ Template.tsq_pasteProfile.helpers({
 		return status.color
 	}
 })
+
 
 Template.tsq_pasteProfile.events({
 	'click #tsq-enterSkillsNext': function (event, instance) {
