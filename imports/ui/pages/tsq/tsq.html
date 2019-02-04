@@ -20,7 +20,11 @@
 
 <!-- the user has filled out tsq before -->
 <template name="tsq_current">
-	<p>TSQ CURRENT</p>
+	<div class="container">
+		{{ > tsq_userSkillsList }}
+		<p class="lead">Do you want to add more skills to this list?</p>
+		<button class="btn btn-primary" id="tsq-addMoreSkills">Add More Skills</button>
+	</div>
 </template>
 
 <!-- the user is filling this out for the first time -->
@@ -35,6 +39,11 @@
 
 <!-- the user can paste their profile or skills section of their resume in -->
 <template name="tsq_pasteProfile">
+		<style type="text/css">
+			#tsq-enterSkillsNext {
+				margin: .5rem 0 0 0;
+			}
+		</style>
 		<div class="container text-center">
 			<h2>Computer Languages</h2>
 			<p class="lead">(and frameworks)</p>
@@ -49,5 +58,12 @@
 
 <!-- this is the user's skills list displayed as a comma delinated string -->
 <template name="tsq_userSkillsList">
+	<div class="text-center">
+		<h2>Your Technical Skills</h2>
+		<p class="lead">Here's what we currently have for you</p>
+	</div>
 	<p>{{ showSkills }}</p>
 </template>
+
+
+<!-- familair/unfamilar template -->
