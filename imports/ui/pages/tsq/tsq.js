@@ -18,6 +18,7 @@ let userSkillsListCurrent;
 
 // the default for this should actually be true unless the user has tsq data already
 let addSkills = new ReactiveVar(false)
+let alreadyHasSkills = new ReactiveVar(true)
 
 // this is for a status notifier but I commented it out because it might be overkill
 let status = {
@@ -86,6 +87,9 @@ Template.tsq_pasteProfile.rendered = function () {
 
 
 Template.tsq_pasteProfile.helpers({
+	alreadyHasSkills () {
+		return alreadyHasSkills.get()
+	},
 	showStatusWord () {
 		return status.word
 	},
@@ -96,7 +100,7 @@ Template.tsq_pasteProfile.helpers({
 
 
 Template.tsq_pasteProfile.events({
-	'click #tsq-enterSkillsNext': function (event, instance) {
+	'click .tsq-enterSkillsContinue': function (event, instance) {
 		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim()
 		userSkillsEntered.set(userEnteredText.split(','))
 		console.log(userSkillsEntered)
