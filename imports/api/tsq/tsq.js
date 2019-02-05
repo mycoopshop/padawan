@@ -80,4 +80,12 @@ const TSQ = Class.create({
 			default: function () { return [] }
 		},
 	}
+	helpers: {},
+	meteorMethods: {
+		addLanguage (TSQId) {},
+		resetUserLanguageList (TSQId) {},
+		updateUserLanguageList (TSQId, LanguageInfoKey) {},
+		removeUserLanguageList (TSQId, LanguageInfoKey) {},
+		updateConfidenceLevelForLanguage (TSQId, LanguageInfoKey) {},
+	}
 })
