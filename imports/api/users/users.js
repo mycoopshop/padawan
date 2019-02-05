@@ -192,7 +192,7 @@ const UserType = Class.create({
 		AnsweredQnaireQuestions: {
             type: [UserQnaire],
             default: function() { return []; }
-		}
+		},
         // TSQ ID/Key information
         technicalSkillsData: {
             type: String,
