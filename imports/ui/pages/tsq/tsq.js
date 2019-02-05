@@ -132,3 +132,10 @@ Template.tsq_addLanguage.helpers({
 	}
 });
 
+Template.tsq_addLanguage.events({
+	'click .tsq-addLanguage': function (event, instance) {
+		let input = $('.input-Info').val();
+		console.log(input);
+	}
+})
+
