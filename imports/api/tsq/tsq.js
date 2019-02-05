@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor'
 import {Mongo} from 'meteor/mongo'
+import {Random} from 'meteor/random'
 import {Class} from 'meteor/jagi:astronomy'
 
 
@@ -54,12 +55,19 @@ const ConfidenceInfo = Class.create({
 const LanguageInfo = Class.create({
 	name: 'language_info',
 	fields: {
+		key: {
+			type: String,
+			default: function () {
+				// defaults to 17 chars
+				return Random.id().toString()
+			},
+		},
 		name: {
 			type: String,
 		},
 		confidenceLevel: {
 			type: ConfidenceInfo,
-		}
+		},
 	}
 })
 
@@ -69,6 +77,17 @@ const TSQ = Class.create({
 	fields: {
 		userLanguageList: {
 			type: [LanguageInfo],
+			default: function () { return [] }
 		},
-	}
+	},
+	helpers: {},
+	meteorMethods: {
+		addLanguage (TSQId) {},
+		resetUserLanguageList (TSQId) {},
+		updateUserLanguageList (TSQId, LanguageInfoKey) {},
+		removeUserLanguageList (TSQId, LanguageInfoKey) {},
+		updateConfidenceLevelForLanguage (TSQId, LanguageInfoKey) {},
+	},
 })
+
+export { ConfidenceRubric, ConfidenceInfo, LanguageInfo, TSQ }

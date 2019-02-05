@@ -2,6 +2,7 @@ import './tsq.html'
 import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
+import { ConfidenceRubric, TSQ, LanguageInfo, ConfidenceInfo } from '/imports/api/tsq/tsq'
 
 /**
  * Variables/Constants
