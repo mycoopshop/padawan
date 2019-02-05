@@ -60,14 +60,14 @@ const LanguageInfo = Class.create({
 			default: function () {
 				// defaults to 17 chars
 				return Random.id().toString()
-			}
+			},
 		},
 		name: {
 			type: String,
 		},
 		confidenceLevel: {
 			type: ConfidenceInfo,
-		}
+		},
 	}
 })
 
@@ -79,7 +79,7 @@ const TSQ = Class.create({
 			type: [LanguageInfo],
 			default: function () { return [] }
 		},
-	}
+	},
 	helpers: {},
 	meteorMethods: {
 		addLanguage (TSQId) {},
@@ -87,7 +87,7 @@ const TSQ = Class.create({
 		updateUserLanguageList (TSQId, LanguageInfoKey) {},
 		removeUserLanguageList (TSQId, LanguageInfoKey) {},
 		updateConfidenceLevelForLanguage (TSQId, LanguageInfoKey) {},
-	}
+	},
 })
 
 export { ConfidenceRubric, ConfidenceInfo, LanguageInfo, TSQ }
