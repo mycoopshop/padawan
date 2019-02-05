@@ -1,5 +1,6 @@
 import {Meteor} from 'meteor/meteor'
 import {Mongo} from 'meteor/mongo'
+import {Random} from 'meteor/random'
 import {Class} from 'meteor/jagi:astronomy'
 
 
@@ -54,6 +55,13 @@ const ConfidenceInfo = Class.create({
 const LanguageInfo = Class.create({
 	name: 'language_info',
 	fields: {
+		key: {
+			type: String,
+			default: function () {
+				// defaults to 17 chars
+				return Random.id().toString()
+			}
+		},
 		name: {
 			type: String,
 		},
