@@ -69,6 +69,7 @@ const TSQ = Class.create({
 	fields: {
 		userLanguageList: {
 			type: [LanguageInfo],
+			default: function () { return [] }
 		},
 	}
 })
