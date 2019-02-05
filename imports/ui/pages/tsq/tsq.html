@@ -99,12 +99,12 @@
 		<h2>Which of the following languages are you familiar with?</h2>
 		<div>
 			{{ #each lang in showLang }}
-				<div>
-					<input type="checkbox" name="{{ lang }}" id="" value="{{ lang }}"> 
+				<div >
+					<input class="input-info" type="checkbox" name="{{ lang }}" id="" value="{{ lang }}"> 
 					<label for="{{ lang }}">{{ lang }}</label>
 				</div>
 			{{ /each }}
-			<button class="btn btn-success">Submit</button>
+			<button class="btn btn-success tsq-addLanguage">Submit</button>
 		</div>
 	</div>
 </template>
