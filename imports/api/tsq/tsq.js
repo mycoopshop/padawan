@@ -89,3 +89,5 @@ const TSQ = Class.create({
 		updateConfidenceLevelForLanguage (TSQId, LanguageInfoKey) {},
 	}
 })
+
+export { ConfidenceRubric, ConfidenceInfo, LanguageInfo, TSQ }
