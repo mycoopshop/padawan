@@ -42,6 +42,13 @@ const subscribeToUsers = function (self) {
     })
     return self
 }
+const subscribeToTSQ = function (self) {
+    self.subscription = self.subscribe('tsq_data', {
+        onStop: console.log('onstop'),
+        onReady: console.log('onready')
+    })
+    return self
+}
 
 /**
  * Templates
@@ -51,6 +58,7 @@ const subscribeToUsers = function (self) {
 Template.tsq_main.onCreated( function () {
 	this.autorun(() => {
 		subscribeToUsers(this)
+		subscribeToTSQ(this)
 		userSkillsEntered.set(testData.skillList.split(','))
 	})
 })
