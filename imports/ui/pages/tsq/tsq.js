@@ -12,6 +12,8 @@ let testData = {
 	skillList: 'python, mongo, sql, javascript, c#'
 }
 
+
+
 let userSkillsInformation = testData.skillList
 let userSkillsEntered = new ReactiveVar();
 let userSkillsListCurrent;
@@ -113,4 +115,20 @@ Template.tsq_userSkillsList.helpers({
 	showSkills() {
 		return userSkillsEntered.get().join(',')
 	}
-})
+});
+
+
+Template.tsq_addLanguage.helpers({
+	showLang() {
+		// static test data for adding more languages
+		let rl = { //rl = random language
+		lang: [
+				'css', 'java', 'php', 'c++', '.net', 
+				'angular', 'vue', 'swift', 'node', 'react'
+			]
+		}	
+		console.log(rl.lang[2]);	
+		return rl.lang;
+	}
+});
+

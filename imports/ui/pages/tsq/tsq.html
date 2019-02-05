@@ -5,10 +5,12 @@
 
 		{{ #if addSkills }}
 			{{ > tsq_addSkills }}
+			{{ > tsq_addLanguage}}
 		{{ else }}
 			{{ > tsq_current }}
 		{{ /if }}
 
+		
 	{{ else }}
 
 		<div class="container text-center">
@@ -89,3 +91,16 @@
 <!-- step 4.1 return a list of unfamiliar languages and new languages up to 10 -->
 <!-- Step 5 Which of the 10 languages are familiar with -->
 <!-- Step 6 Add checked language to user's list of languages -->
+
+<!-- Step 6 add languages -->
+<template name="tsq_addLanguage">	
+	<div class="container">
+		<h2>Which of the following languages are you familiar with?</h2>
+		<div>
+			{{ #each l in showLang }}
+			<input type="checkbox" name="{{l}}" id="" value="{{l}}"> {{l}}			
+			{{ /each }}
+			<button class="btn btn-success">Submit</button>
+		</div>
+	</div>
+</template>
