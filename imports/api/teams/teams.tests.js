@@ -1,20 +1,20 @@
-import { Meteor } from 'meteor/meteor';
-import { chai } from 'meteor/practicalmeteor:chai';
-import { Team } from './teams.js';
-import { resetDatabase } from 'meteor/xolvio:cleaner';
+import { Meteor } from "meteor/meteor";
+import { chai } from "meteor/practicalmeteor:chai";
+import { Team } from "./teams.js";
+import { UserNotify } from "../user_notify/user_notify.js";
+import { User } from "../users/users.js";
+import { resetDatabase } from "meteor/xolvio:cleaner";
 
 if (Meteor.isServer) {
-    describe('Team', function () {
-        this.timeout(15000);
-        it('user can ask to join a team', function () {
-            //
-        });
-        it('admin can ask user to join a team');
-        it('user can accept team invite');
-        it('user can decline team invite');
-        it('admin can accept user join request');
-        it('admin can reject user join request');
-        it('admin can add team role to team member');
-        it('admin can remove team role from team member');
-    });
+  describe("Team", function() {
+    this.timeout(15000);
+    it("user can ask to join a team", function() {});
+    it("admin can ask user to join a team", function() {});
+    it("user can accept team invite");
+    it("user can decline team invite");
+    it("admin can accept user join request");
+    it("admin can reject user join request");
+    it("admin can add team role to team member");
+    it("admin can remove team role from team member");
+  });
 }
