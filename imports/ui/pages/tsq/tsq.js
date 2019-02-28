@@ -2,7 +2,7 @@ import './tsq.html'
 import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
-import { ConfidenceRubric, TSQ, LanguageInfo, ConfidenceInfo } from '/imports/api/tsq/tsq'
+import { ConfidenceRubric } from '/imports/api/tsq/tsq'
 
 /**
  * Variables/Constants
@@ -42,13 +42,6 @@ const subscribeToUsers = function (self) {
     })
     return self
 }
-const subscribeToTSQ = function (self) {
-    self.subscription = self.subscribe('tsq_data', {
-        onStop: console.log('onstop'),
-        onReady: console.log('onready')
-    })
-    return self
-}
 
 /**
  * Templates
@@ -58,7 +51,6 @@ const subscribeToTSQ = function (self) {
 Template.tsq_main.onCreated( function () {
 	this.autorun(() => {
 		subscribeToUsers(this)
-		subscribeToTSQ(this)
 		userSkillsEntered.set(testData.skillList.split(','))
 	})
 })
@@ -66,7 +58,6 @@ Template.tsq_main.onCreated( function () {
 
 // main temp helpers
 Template.tsq_main.helpers({
-	// renamed from noCurrentTSQ. represents whether user wants to add skills / doesn't currently have any
 	addSkills(){
 		return addSkills.get()
 	}
@@ -132,11 +123,11 @@ Template.tsq_addLanguage.helpers({
 		// static test data for adding more languages
 		let rl = { //rl = random language
 		lang: [
-				'css', 'java', 'php', 'c++', '.net', 
+				'css', 'java', 'php', 'c++', '.net',
 				'angular', 'vue', 'swift', 'node', 'react'
 			]
-		}	
-		console.log(rl.lang[2]);	
+		}
+		console.log(rl.lang[2]);
 		return rl.lang;
 	}
 });
