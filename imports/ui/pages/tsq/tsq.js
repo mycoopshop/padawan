@@ -3,6 +3,7 @@ import { Template } from 'meteor/templating'
 import { User } from '/imports/api/users/users.js'
 import { ReactiveVar } from 'meteor/reactive-var'
 import { ConfidenceRubric } from '/imports/api/tsq/tsq'
+import { Meteor } from 'meteor/meteor'
 
 /**
  * Variables/Constants
@@ -13,11 +14,12 @@ let testData = {
 	skillList: 'python, mongo, sql, javascript, c#'
 }
 
-
+const USER_URL = 'http://localhost:4000/tsq/skills/users/'
 
 let userSkillsInformation = testData.skillList
 let userSkillsEntered = new ReactiveVar();
 let userSkillsListCurrent;
+let currentUser = new ReactiveVar();
 
 // the default for this should actually be true unless the user has tsq data already
 let addSkills = new ReactiveVar(false)
@@ -29,38 +31,47 @@ let status = {
 	color: 'success',
 }
 
+let user;
+
 /**
  * Functions
  */
-
-
-// subs
-const subscribeToUsers = function (self) {
-    self.subscription = self.subscribe('users', {
-        onStop: console.log('onstop'),
-        onReady: console.log('onready')
-    })
-    return self
-}
 
 /**
  * Templates
  */
 
 // main temp
-Template.tsq_main.onCreated( function () {
+Template.tsq_main.onCreated(function () {
 	this.autorun(() => {
-		subscribeToUsers(this)
-		userSkillsEntered.set(testData.skillList.split(','))
+		this.subscription = this.subscribe('userData', {
+      onStop: function () {
+          console.log("User profile subscription stopped! ", arguments, this);
+      },
+      onReady: function () {
+          console.log("User profile subscription ready! ", arguments, this);
+      }
+	  });
+		this.subscription2 = this.subscribe('userList', this.userId, {
+	      onStop: function () {
+	          console.log("User List subscription stopped! ", arguments, this);
+	      },
+	      onReady: function () {
+	          console.log("User List subscription ready! ", arguments, this);
+	      }
+	  });
+	  let uid = Meteor.userId()
+	  user = User.findOne({_id: uid })
 	})
-})
+});
 
 
 // main temp helpers
 Template.tsq_main.helpers({
 	addSkills(){
+		console.log(user.MyProfile)
 		return addSkills.get()
-	}
+	},
 });
 
 
@@ -113,7 +124,7 @@ Template.tsq_pasteProfile.events({
 
 Template.tsq_userSkillsList.helpers({
 	showSkills() {
-		return userSkillsEntered.get().join(',')
+		// return userSkillsEntered.get().join(',')
 	}
 });
 
