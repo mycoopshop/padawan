@@ -1,19 +1,21 @@
-<template name="tsq_main">
+<!-- Main Template -->
+<template name="tsq_userLanguageList">
 	{{ #if Template.subscriptionsReady }}
 
-		<!-- <h1>Technical Skills</h1> -->
+			{{#unless hasTSQData}}
+				<!-- Register user with key -->
+				{{ registerUserWithKey }}
+			{{/unless}}
 
-		{{ #if addSkills }}
-			{{ > tsq_addSkills }}
-			{{ > tsq_addLanguage}}
-		{{ else }}
-			{{ getUser }}
-			{{ > tsq_current }}
-		{{ /if }}
-
+			<!-- render add skills and list of current skills -->
+			{{ > tsq_pasteProfile }}
+			<div class="container">
+				{{ > tsq_userSkillsList }}
+			</div>
 
 	{{ else }}
 
+		<!-- show loading img -->
 		<div class="container text-center">
 			{{ > loading }}
 		</div>
@@ -21,35 +23,20 @@
 	{{ /if }}
 </template>
 
-<!-- the user has filled out tsq before -->
-<template name="tsq_current">
-	<div class="container">
-		{{ > tsq_userSkillsList }}
-		<p class="lead">Do you want to add more skills to this list?</p>
-		<button class="btn btn-primary" id="tsq-addMoreSkills">Add More Skills</button>
-	</div>
-</template>
-
-<!-- the user is filling this out for the first time -->
-<template name="tsq_addSkills">
-	{{ #if noEnteredText }}
-		{{ > tsq_pasteProfile }}
-		<div class="container">
-			{{ > tsq_userSkillsList }}
-		</div>
-	{{ /if }}
-</template>
-
 <!-- the user can paste their profile or skills section of their resume in -->
 <template name="tsq_pasteProfile">
+		<!-- styles -->
 		<style type="text/css">
 			.tsq-enterSkillsContinue {
 				margin: .5rem 0 0 0;
 			}
 		</style>
+
 		<div class="container text-center">
 			<h2>Computer Languages</h2>
 			<p class="lead">(and frameworks)</p>
+
+			<!-- description message -->
 			{{ #if alreadyHasSkills }}
 				<label for="tsq-enterSkillsTextarea">Do you have anything to add?</label>
 			{{ else }}
@@ -57,8 +44,11 @@
 						we'll pull the programming, scripting, and markup languages and
 						frameworks you're familiar with</label>
 			{{ /if }}
+
+			<!-- textarea to enter skills -->
 			<textarea class="form-control" rows="5" id="tsq-enterSkillsTextarea"></textarea>
-			<!-- <p><small id="tsq-status-banner" class="{{ showSTatusColor }}">Status: {{ showStatusWord }}</small></p> -->
+
+			<!-- buttons -->
 			{{ #if alreadyHasSkills }}
 				<button class="btn btn-default tsq-enterSkillsContinue" id="">No that's it</button>
 				<br>
@@ -66,6 +56,7 @@
 			{{ else }}
 			<button class="btn btn-success tsq-enterSkillsContinue" id="">Next</button>
 			{{ /if }}
+
 		</div>
 </template>
 
@@ -95,7 +86,7 @@
 <!-- Step 7 Style Code -->
 
 <!-- Step 6 add languages -->
-<template name="tsq_addLanguage">
+<!-- <template name="tsq_addLanguage">
 	<div class="container styleTest">
 		<h2>Which of the following languages are you familiar with?</h2>
 		<div>
@@ -108,4 +99,4 @@
 			<button class="btn btn-success">Submit</button>
 		</div>
 	</div>
-</template>
+</template> -->

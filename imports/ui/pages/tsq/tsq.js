@@ -14,35 +14,49 @@ let testData = {
 	skillList: 'python, mongo, sql, javascript, c#'
 }
 
+// TODO: change to config file
 const USER_URL = 'http://localhost:4000/tsq/skills/users/'
 
-let userSkillsInformation = testData.skillList
-let userSkillsEntered = new ReactiveVar();
-let userSkillsListCurrent;
-let currentUser = new ReactiveVar();
+// return true if the user has a TSQ Key
+let hasTSQData = new ReactiveVar(true)
 
-// the default for this should actually be true unless the user has tsq data already
-let addSkills = new ReactiveVar(false)
-let alreadyHasSkills = new ReactiveVar(true)
+// return false if the user does not have any skills data
+let alreadyHasSkills = new ReactiveVar(false)
 
-// this is for a status notifier but I commented it out because it might be overkill
-let status = {
-	word: 'testing',
-	color: 'success',
-}
-
+// variable to hold the current user data
 let user;
+
 
 /**
  * Functions
  */
 
 /**
+ * @desc
+ * registers a technical skills key to a user
+ * @param  {[type]} url  	TSQ API URL
+ * @param  {[type]} user 	The user to be registered
+ * @return {*}      			No return data
+ */
+async function registerKey (url, user) {
+	let options = { method: "POST" };
+	let response = await fetch(url + '/register', options);
+	let json = await response.json();
+	let key = json.data.key;
+
+	// user meteor method
+	user.registerTechnicalSkillsDataKey(key);
+
+	return
+}
+
+
+/**
  * Templates
  */
 
 // main temp
-Template.tsq_main.onCreated(function () {
+Template.tsq_userLanguageList.onCreated(function () {
 	this.autorun(() => {
 		this.subscription = this.subscribe('userData', {
       onStop: function () {
@@ -60,6 +74,7 @@ Template.tsq_main.onCreated(function () {
 	          console.log("User List subscription ready! ", arguments, this);
 	      }
 	  });
+	  // set the user
 	  let uid = Meteor.userId()
 	  user = User.findOne({_id: uid })
 	})
@@ -67,35 +82,24 @@ Template.tsq_main.onCreated(function () {
 
 
 // main temp helpers
-Template.tsq_main.helpers({
-	addSkills(){
-		console.log(user.MyProfile)
-		return addSkills.get()
+Template.tsq_userLanguageList.helpers({
+	// check if the user has technical skills data
+	hasTSQData(){
+		// if the field is undefined the user does not have any tsq data yet, return false
+		(user.MyProfile.technicalSkillsData === undefined) ? false : true
 	},
-});
-
-
-// add skills tsq workflow
-Template.tsq_addSkills.helpers({
-	noEnteredText() {
-		console.log('returning true for now')
-		return true
-	}
-});
-
-
-// tsq current template
-Template.tsq_current.events({
-	'click #tsq-addMoreSkills': function (event, instance) {
-		addSkills.set(true)
+	// register a tsq key to the user
+	registerUserWithKey() {
+		registerKey(USER_URL, user)
+		console.log(user)
+		return
 	}
 })
 
 
 // enter skill textarea and next button
 Template.tsq_pasteProfile.rendered = function () {
-	let textarea = $('#tsq-enterSkillsTextarea')
-		textarea.val(testData.skillList)
+	$('#tsq-enterSkillsTextarea').val(testData.skillList)
 };
 
 
@@ -103,12 +107,6 @@ Template.tsq_pasteProfile.helpers({
 	alreadyHasSkills () {
 		return alreadyHasSkills.get()
 	},
-	showStatusWord () {
-		return status.word
-	},
-	showSTatusColor () {
-		return status.color
-	}
 })
 
 
@@ -125,21 +123,22 @@ Template.tsq_pasteProfile.events({
 Template.tsq_userSkillsList.helpers({
 	showSkills() {
 		// return userSkillsEntered.get().join(',')
+		return 'Show the users skilldata here'
 	}
 });
 
 
-Template.tsq_addLanguage.helpers({
-	showLang() {
-		// static test data for adding more languages
-		let rl = { //rl = random language
-		lang: [
-				'css', 'java', 'php', 'c++', '.net',
-				'angular', 'vue', 'swift', 'node', 'react'
-			]
-		}
-		console.log(rl.lang[2]);
-		return rl.lang;
-	}
-});
+// Template.tsq_addLanguage.helpers({
+// 	showLang() {
+// 		// static test data for adding more languages
+// 		let rl = { //rl = random language
+// 		lang: [
+// 				'css', 'java', 'php', 'c++', '.net',
+// 				'angular', 'vue', 'swift', 'node', 'react'
+// 			]
+// 		}
+// 		console.log(rl.lang[2]);
+// 		return rl.lang;
+// 	}
+// });
 

@@ -107,10 +107,10 @@ FlowRouter.route('/dashboard', {
     },
 });
 
-FlowRouter.route('/tsq', {
+FlowRouter.route('/tsq/userLanguageList', {
     name: 'tsq',
     action () {
-        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_main' })
+        BlazeLayout.render('App_body', { top: 'header', main: 'tsq_userLanguageList' })
     },
 })
 // FlowRouter.route('/tsq/languagelist', {})

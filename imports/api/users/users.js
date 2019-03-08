@@ -169,8 +169,8 @@ const UserQnaire = Class.create({
 				return element.label == myLabel;
 			}
 			qnAnIndex = this.QnairAnswers.findIndex(eqLabel);
-			this.QnairAnswers[qnAnIndex].question = myQuestion; 
-			//this.QnairAnswers[qnAnIndex].answer = myAnswer; 
+			this.QnairAnswers[qnAnIndex].question = myQuestion;
+			//this.QnairAnswers[qnAnIndex].answer = myAnswer;
         }
 	}
 });
@@ -343,6 +343,9 @@ const Profile = Class.create({
             type: [String],
             default: []
         },
+        technicalSkillsData: {
+            type: String,
+        },
         emailNotifications: {
           type: Boolean,
           default: true
@@ -462,6 +465,11 @@ const User = Class.create({
             if (Roles.userIsInRole(Meteor.userId(), 'admin', Roles.GLOBAL_GROUP)) {
                 Roles.removeUsersFromRoles(this._id, role, Roles.GLOBAL_GROUP);
             }
+        },
+        registerTechnicalSkillsDataKey(TSQKey) {
+            this.MyProfile.technicalSkillsData = TSQKey;
+            console.log(this.MyProfile.technicalSkillsData)
+            return this.save();
         }
     },
     indexes: {
