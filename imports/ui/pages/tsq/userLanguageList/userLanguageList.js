@@ -25,8 +25,8 @@ function getSelections(selections) {
 	let r = []
 	selections.forEach(sel => {
 		let entry = {
-			value: sel._id,
-			text: sel.name
+			value: sel.name._id,
+			text: sel.name.name
 		}
 		r.push(entry)
 	})
@@ -63,23 +63,18 @@ function buildUserSkillObject (skill) {
 }
 
 //
-// Functions with Meteor Calls to the API 
-// 
+// Functions with Meteor Calls to the API
+//
 
 function checkUserForSkill (skill, key) {
 	console.log(skill, key);
-	
-	Meteor.call('tsq.checkUserForSkill', skill, key, (error, result) => {
-		if (error) {
-			console.log('this item was not found', skill)
-			flag.set(false)
-		} else {
-			console.log(result, skill)
-			flag.set(true)
-		}
-	})
+	console.log("-=-=-=-=-=-=-= checkUserForSkill", skill, key);
 
-	return flag.get()	
+	//let syncCall = Meteor.wrapAsync(Meteor.call);
+	//let result = syncCall('tsq.checkUserForSkill', skill, key);
+	let result = Meteor.call('tsq.checkUserForSkill', skill, key);
+	console.log("-=-=-=-=-=-=-= checkUserForSkill", result);
+	if (result) return true; else return false;
 }
 
 
@@ -95,6 +90,7 @@ function removeSkillFromUser (SkillEntryarray, key) {
 
 
 function getAllSkillsFromDB (list) {
+	/*
 	Meteor.call('tsq.getAllSkills', (error, result) => {
 		if (error) {
 			console.log('METEOR CALL ERROR: ', error)
@@ -110,6 +106,17 @@ function getAllSkillsFromDB (list) {
 			list.set(array);
 		}
 	})
+	*/
+	let result = Meteor.call('tsq.getAllSkills');
+	let arrayList = [];
+	result.data.data.payload.forEach(element => {
+		arrayList.push({
+			value: element._id,
+			text: element.name
+		})
+	});
+	list.set(arrayList);
+
 	console.log('All Skills List: ', list)
 	return list;
 }
@@ -117,9 +124,9 @@ function getAllSkillsFromDB (list) {
 
 /**
  * @name checkForKeyAndGetData
- * @description checks user for a technicalSkillsData key, 
- * 				assigns the key, stores the data in a reactive 
- * 				var named keyData 
+ * @description checks user for a technicalSkillsData key,
+ * 				assigns the key, stores the data in a reactive
+ * 				var named keyData
  * @param {Object} user	User from the  db
  */
 function checkForKeyAndGetData (user) {
@@ -129,21 +136,24 @@ function checkForKeyAndGetData (user) {
 				console.log('METEOR CALL ERROR: ', error)
 			} else {
 				let key = result.data.data.key
-				keyData.set(result.data.data)
+				keyData.set(result.data.data);
+				console.log("tsq.registerKeyToUser set keyData", keyData);
 				user.registerTechnicalSkillsDataKey(key);
 			}
 		})
-	}else{		
+	}else{
 		Meteor.call('tsq.getKeyData', user.MyProfile.technicalSkillsData, (error, result) => {
 			if (error) {
 				console.log('METEOR CALL ERROR: ', error)
 			} else {
+				console.log("tsq.getKeyData result", result);
 				if (result.data.data.payload.skills.length !== 0) {
-					userAlreadyHasSkills.set(true)	
+					userAlreadyHasSkills.set(true)
 				}
 				keyData.set(result.data.data.payload)
+				console.log("tsq.getKeyData set keyData", keyData);
 			}
-			
+
 		});
 	};
 }
@@ -151,15 +161,15 @@ function checkForKeyAndGetData (user) {
 
 /**
  * @name addSkillToUser
- * @description	takes in a formatted array of skill objects to update the users tsq key with, and their key, 
- * 				and updates the users tsq key 
+ * @description	takes in a formatted array of skill objects to update the users tsq key with, and their key,
+ * 				and updates the users tsq key
  * @param 	{Array<Object>} 	arrayOfSkillInformation 	formatted array of objects containing at least a 'name' parameter
- * @param 	{String} 			userKey 					users key 
- * @returns {*} 				Returns a console log with either the result or the error if there is an error 
+ * @param 	{String} 			userKey 					users key
+ * @returns {*} 				Returns a console log with either the result or the error if there is an error
  */
 function addSkillsToUser(arrayOfSkillInformation, userKey) {
 	arrayOfSkillInformation.forEach(skillEntry => {
-		let existsAlready = checkUserForSkill(skillEntry.name, userKey) // returns true/false
+		let existsAlready = checkUserForSkill(skillEntry.id, userKey) // returns true/false
 		if (!existsAlready) {
 			Meteor.call('tsq.addSkillToUser', arrayOfSkillInformation, userKey, (error, result) => {
 				if (error) {
@@ -167,24 +177,26 @@ function addSkillsToUser(arrayOfSkillInformation, userKey) {
 				} else {
 					console.log('METEOR CALL RESULT: ', result)
 				}
-			})
-			keyData.get().skills.push(skillEntry)
-		} 
+			});
+			/*let x = keyData.get()
+			x.skills.push(skillEntry);
+			keyData.set(x);*/
+		}
 	})
 }
 
 /**
- * @name addSkillToDb 
- * @description 			add a skill into the microservice db 
+ * @name addSkillToDb
+ * @description 			add a skill into the microservice db
  * @param {String} skill 	name of the skill to add
- * @returns void  
+ * @returns void
  */
 function addSkillToDb (skill) {
-	// check for empty string 
+	// check for empty string
 	if (skill.length <= 0) {
-		return 
+		return
 	}
-	// run meteor call to tsq api 
+	// run meteor call to tsq api
 	Meteor.call('tsq.addSkill', skill.toUpperCase().trim(), (error, result) => {
 		if (error) {
 			console.log('METEOR CALL ERROR: ', error)
@@ -197,20 +209,20 @@ function addSkillToDb (skill) {
 /**
  * @name checkMasterListForSkill
  * @description takes in a string that represents the name of a skill and checks the tsq db for existence of this skill
- * 				if the skill exists, it adds the skill to the queue of skills to update for the user, else it adds the 
- * 				skill to the no-match list for the no-match alert 
- * @param {String} skill 	string describing the name of a skill.  (API Search is case-sensitive) 
+ * 				if the skill exists, it adds the skill to the queue of skills to update for the user, else it adds the
+ * 				skill to the no-match list for the no-match alert
+ * @param {String} skill 	string describing the name of a skill.  (API Search is case-sensitive)
  */
 function checkMasterListForSkill(skill) {
 
-	// check for empty string 
+	// check for empty string
 	if (skill.length <= 0) {
-		return 
+		return
 	}
 
-	// Meteor method to test api 
+	// Meteor method to test api
 	Meteor.call('tsq.skillLookup', skill, (error, response) => {
-		if (error) { 
+		if (error) {
 			console.log('no match found in skill db, adding to db', skill)
 			buildUserSkillObject(skill)
 			if (userAlreadyHasSkills.get() === true) {
@@ -227,9 +239,9 @@ function checkMasterListForSkill(skill) {
 				buildUserSkillObject (skill)
 				userAlreadyHasSkills.set(true)
 
-				// check the tags for matches? 
+				// check the tags for matches?
 				if (skillTags !== undefined) {
-					skillTags.forEach(tag => checkMasterListForSkill(tag)) 
+					skillTags.forEach(tag => checkMasterListForSkill(tag))
 				}
 			}
 		}
@@ -253,15 +265,15 @@ Template.tsq_userLanguageList.onCreated(function () {
 				let userId = Meteor.userId();
 				user = User.findOne({_id:userId});
 				checkForKeyAndGetData(user)
+				getAllSkillsFromDB(allSkillsFromDB);
 			}
 		});
-		getAllSkillsFromDB(allSkillsFromDB);
 	})
 });
 
 
 
-// global template helpers 
+// global template helpers
 Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 
 //
@@ -271,10 +283,10 @@ Template.registerHelper('alreadyHasSkills', alreadyHasSkills)
 Template.tsq_userLanguageList.helpers({
 	userDataRetrieved() {
 		return keyData.get()
-	}	
+	}
 })
 
-// 
+//
 // PASTE PROFILE TEMP
 //
 
@@ -283,23 +295,27 @@ Template.tsq_pasteProfile.rendered = function () {
 	if (keyData.get() !== undefined) {
 		str = ''
 		keyData.get().skills.forEach(obj => {
-			str += obj.name + ', '
-		})
-		$('#tsq-enterSkillsTextarea').val(str)
+			str += obj.name.name + ', '
+		});
+		$('#tsq-enterSkillsTextarea').val(str);
 	}
 };
 
 Template.tsq_pasteProfile.helpers({
 	onItemAdd () {
 		return (value, $item) => {
+			console.log("onItemAdd triggered ============================");
 			// create skill entry obj
 			let skillEntry = {
 				id: value,
 				name: $($item).text().substring(0, $($item).text().length - 1),
 				familiar: true
 			};
-			// add the item to the user skills 
+			// add the item to the user skills
 			addSkillsToUser([skillEntry], keyData.get().key);
+			/*let x = allSkillsFromDB.get();
+			x.push(skillEntry);
+			allSkillsFromDB.set(x);*/
         }
 	},
 	onItemRemove () {
@@ -309,13 +325,13 @@ Template.tsq_pasteProfile.helpers({
 				name: $($item).text().substring(0, $($item).text().length - 1)
 			};
 
-			// remove the skill from the user 
+			// remove the skill from the user
 			removeSkillFromUser([skillEntry], keyData.get().key)
 		}
 	},
 	itemSelectHandler () {
 		let selections = getSelections(keyData.get().skills)
-		return selections 
+		return selections
 	},
 	itemListHandler () {
 		return allSkillsFromDB.get()
@@ -325,7 +341,7 @@ Template.tsq_pasteProfile.helpers({
 Template.tsq_pasteProfile.events({
 	'click .tsq-enterSkillsContinue': function (event, instance) {
 		let userEnteredText = $('#tsq-enterSkillsTextarea').val().toString().trim().split(',')
-		
+
 		userSkillsEntered.set(userEnteredText)
 		userSkillsEntered.get().forEach(skill => {
 			checkMasterListForSkill(skill.trim().toUpperCase(), false)
@@ -343,9 +359,8 @@ Template.tsq_pasteProfile.events({
 		skills.forEach(skill => {
 			checkMasterListForSkill(skill.trim().toUpperCase(), true)
 		})
-		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key) 
-		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key) 
+		addSkillsToUser(userSkillUpdateArray.get(), keyData.get().key)
+		FlowRouter.go('/tsq/familiarVsUnfamiliar/' + keyData.get().key)
 		return
 	},
 });
-
